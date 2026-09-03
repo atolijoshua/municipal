@@ -1,0 +1,8 @@
+{
+  "appId": "ph.gov.daraga.respond",
+  "appName": "Daraga ResponD",
+  "webDir": "public",
+  "server": {
+    "androidScheme": "https"
+  }
+}

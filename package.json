@@ -1,0 +1,31 @@
+{
+  "name": "daraga-municipality-app",
+  "version": "1.0.0",
+  "description": "Daraga, Albay Municipality Offline/Online Incident Reporting Application",
+  "main": "main.js",
+  "scripts": {
+    "start": "node server.js",
+    "app": "electron ."
+  },
+  "keywords": [
+    "daraga",
+    "albay",
+    "municipality",
+    "offline-first",
+    "sqlite",
+    "pwa",
+    "electron"
+  ],
+  "author": "Daraga Municipality IT",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2",
+    "localtunnel": "^2.0.2"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/cli": "^8.5.1",
+    "@capacitor/core": "^8.5.1",
+    "electron": "^34.2.0"
+  }
+}
