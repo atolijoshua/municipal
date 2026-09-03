@@ -1,41 +1,36 @@
-name: Build Android APK
-
+name: Build Daraga ResponD Android APK
 on:
-push:  
-branches:    
-- main
-
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
 jobs:
-build:
-runs-on: unbuntu-latest
-
-steps:    
- -name: Checkout Code
- uses: actions/checkout@v3
-
- -name: Set up Java 17
- uses: actions/setup-java@v3
-with:
-    distribution:'zulu'
-    java-version: '17'
-
-    -name: Setup Node.js
-    uses: actions/setup-node@v3
-    with:
-    node-version:'18'
-
-    -name: Install Dependencies
-    run: npm install
-
-    -name: Build Android APK
-    run |
-    cd android
-    chmod+xgradlew
-    ./gradlew assembleRelease
-
-    -name: Upload APKK Artifact
-    uses: actions/upload-artifact@v3
-    with:
-    name: daraga-respond-release
-    path: android/app/build/
-    outputs/apk/release/*.apk
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      - name: Setup Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install Node Dependencies
+        run: npm install
+      - name: Sync Capacitor Android
+        run: npx cap sync android
+      - name: Build Android APK
+        run: |
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: daraga-respond.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
