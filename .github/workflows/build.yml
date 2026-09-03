@@ -26,35 +26,28 @@ jobs:
         with:
           node-version: 20
 
-      - name: Prepare Web Directory
+      - name: Install Capacitor CLI
+        run: npm install @capacitor/core @capacitor/cli @capacitor/android
+
+      - name: Create Web Asset Directory
         run: |
           mkdir -p www
-          cp -r public/* www/ 2>/dev/null || true
-          cp -r * www/ 2>/dev/null || true
+          cp -r public/* www/ 2>/dev/null || cp -r * www/ 2>/dev/null || true
 
-      - name: Build Android Project
-        continue-on-error: true
+      - name: Initialize Native Android Project
         run: |
-          npm install -g @capacitor/cli @capacitor/core
-          npm install @capacitor/core @capacitor/android
-          npx cap init "Daraga ResponD" "ph.gov.daraga.respond" --web-dir www --no-interaction
+          rm -f capacitor.config.json
+          npx cap init "Daraga ResponD" "ph.gov.daraga.respond" --web-dir www
           npx cap add android
-          npx cap sync android
 
-      - name: Compile Debug APK
+      - name: Compile Real Native Android APK
         run: |
-          if [ -d "android" ]; then
-            cd android
-            chmod +x gradlew
-            ./gradlew assembleDebug
-          else
-            echo "Building fallback package..."
-            mkdir -p android/app/build/outputs/apk/debug
-            touch android/app/build/outputs/apk/debug/app-debug.apk
-          fi
+          cd android
+          chmod +x gradlew
+          ./gradlew assembleDebug
 
-      - name: Upload Android APK
+      - name: Upload Real Android APK
         uses: actions/upload-artifact@v4
         with:
-          name: daraga-respond.apk
+          name: daraga-respond-real.apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
