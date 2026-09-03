@@ -24,16 +24,25 @@ jobs:
       - name: Prepare Web Directory
         run: |
           mkdir -p www
-          cp public/* www/ 2>/dev/null || cp * www/ 2>/dev/null || true
+          cp -r public/* www/ 2>/dev/null || true
+          cp -r * www/ 2>/dev/null || true
 
-      - name: Build Android App Package
+      - name: Install Capacitor CLI
+        run: npm install -g @capacitor/cli @capacitor/core
+
+      - name: Create Base Package Config
         run: |
           rm -f capacitor.config.json || true
-          npm init -y
-          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest
-          npx cap init "Daraga ResponD" "ph.gov.daraga.respond" --web-dir www --no-interaction
-          npx cap add android
-          npx cap sync android
+          echo '{"appId":"ph.gov.daraga.respond","appName":"Daraga ResponD","webDir":"www"}' > capacitor.config.json
+
+      - name: Add Android Platform
+        run: |
+          npm install @capacitor/core @capacitor/android
+          npx cap add android || true
+          npx cap sync android || true
+
+      - name: Compile Debug APK
+        run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
