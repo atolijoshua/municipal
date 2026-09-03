@@ -28,6 +28,7 @@ jobs:
 
       - name: Build Android App Package
         run: |
+          rm -f capacitor.config.json || true
           npm init -y
           npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest
           npx cap init "Daraga ResponD" "ph.gov.daraga.respond" --web-dir www --no-interaction
