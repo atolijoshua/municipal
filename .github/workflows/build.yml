@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup Java JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -24,15 +24,15 @@ jobs:
       - name: Prepare Web Directory
         run: |
           mkdir -p www
-          cp -r * www/ 2>/dev/null || true
+          cp public/* www/ 2>/dev/null || cp * www/ 2>/dev/null || true
 
-      - name: Build Android APK
+      - name: Build Android App Package
         run: |
           npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "Daraga ResponD" "ph.gov.daraga.respond" --web-dir www --no-interaction || true
-          npx cap add android || true
-          npx cap sync android || true
+          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest
+          npx cap init "Daraga ResponD" "ph.gov.daraga.respond" --web-dir www --no-interaction
+          npx cap add android
+          npx cap sync android
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
