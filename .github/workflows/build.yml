@@ -15,33 +15,32 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Java JDK 21
-        uses: actions/setup-java@v5
+      - name: Setup Java JDK 17
+        uses: actions/setup-java@v4
         with:
-          java-version: '21'
+          java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install Dependencies
-        run: npm install @capacitor/core @capacitor/cli @capacitor/android
-
-      - name: Prepare Android Platform
+      - name: Prepare Web Directory
         run: |
-          npx cap init "Daraga ResponD" "ph.gov.daraga.respond" --web-dir public || true
-          npx cap add android || true
+          mkdir -p www
+          cp -r * www/ 2>/dev/null || true
+
+      - name: Initialize Capacitor & Android Platform
+        run: |
+          npm init -y
+          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npx cap init "Daraga ResponD" "ph.gov.daraga.respond" --web-dir www
+          npx cap add android
           npx cap sync android
 
-      - name: Build Debug APK
+      - name: Build Android APK
         run: |
           cd android
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK Artifact
+      - name: Upload Android APK
         uses: actions/upload-artifact@v4
         with:
           name: daraga-respond.apk
